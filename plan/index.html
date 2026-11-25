@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan de migración y trabajo · ACP/OCP en 1020</title>
+<meta name="description" content="Plan de trabajo propuesto: historias eliminadas, modificadas y nuevas al migrar ACP y OCP de Autorizaciones a 1020.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2a78d6">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/styles.css">
+<script>(function(){var s=localStorage.getItem("acp-theme");document.documentElement.dataset.theme=s||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();</script>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<div id="tip" role="tooltip"></div>
+
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="../" aria-label="Inicio"><span class="mark" aria-hidden="true">AO</span>ACP · OCP <span class="muted" style="font-weight:500">/ Migración a 1020</span></a>
+  <nav class="switch">
+    <a href="../arquitectura/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="8.5" y="14" width="7" height="7" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></svg><span>Análisis de arquitectura</span></a>
+    <a class="on" href="../plan/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="18" r="2"/></svg><span>Plan de migración y trabajo</span></a>
+  </nav>
+  <button class="theme" id="theme" aria-label="Cambiar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div></header>
+
+<main id="contenido">
+<header class="hero"><div class="wrap">
+  <span class="badge"><b>Propuesta</b>Feature 848182 · historias en la Feature 1299679 · 24 nov 2026</span>
+  <h1>Primero migrar la creación, <em>después la retroactividad una sola vez</em></h1>
+  <p class="lead">Así cambia el plan de la Feature al llevar a 1020 la creación de ACP y OCP de Autorizaciones y hacer la retroactividad para los dos procesos. Nada se ha modificado en Azure DevOps: todo queda sujeto a validación y aprobación.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="n">22 <span class="muted" style="font-weight:400">→</span> 24</div><div class="l">historias activas en el plan</div></div>
+    <div class="kpi"><div class="n" style="color:var(--del)">9</div><div class="l">se eliminan: toda la retroactividad en 1018</div></div>
+    <div class="kpi"><div class="n" style="color:var(--chg)">12</div><div class="l">cambian de alcance: 11 de 1020 pasan a ambos procesos</div></div>
+    <div class="kpi"><div class="n" style="color:var(--new)">11</div><div class="l">se agregan: habilitador, 8 de migración por entidad, conmutación y retiro</div></div>
+  </div>
+</div></header>
+
+<section id="flujo"><div class="wrap">
+  <div class="sh"><span class="num">01</span><div><h2>Qué pasa con cada historia</h2><p class="sub">Flujo desde el plan actual (por componente) hasta el plan propuesto. Pasa el cursor sobre cada banda para ver las historias.</p></div></div>
+  <div class="card">
+    <div class="legend" style="margin-bottom:10px"><span><span class="sw" style="background:var(--del)"></span>× Se elimina</span><span><span class="sw" style="background:var(--chg)"></span>↻ Cambia</span><span><span class="sw" style="background:var(--new)"></span>+ Nueva</span><span><span class="sw" style="background:var(--keep)"></span>= Sin cambio</span></div>
+    <svg class="sankey dia" id="sankey" viewBox="0 0 1100 440"></svg>
+  </div>
+  <div class="g2" style="margin-top:18px">
+    <div class="card"><h3>Historias por componente</h3><p class="muted small" style="margin:0 0 16px">La carga de 1018 baja de 11 historias a 3: el análisis de línea base, la creación del prestador y el retiro.</p>
+      <div class="compbar" id="comp"></div></div>
+    <div class="card"><h3>Lectura rápida</h3><ul class="pc">
+      <li class="c"><b>×</b>Las 9 historias de retroactividad en 1018 desaparecen: su contenido lo absorbe la historia par de 1020. 1315680 estaba en progreso.</li>
+      <li class="p"><b>↻</b>Las 11 de 1020 ganan un criterio: aplican a Autorizaciones y a Cuentas Médicas.</li>
+      <li class="p"><b>+</b>11 nuevas: identificación del proceso, 4 historias de migración OCP y 4 ACP (una por entidad de OHI), conmutación del consumidor y retiro en 1018.</li>
+      <li class="p"><b>=</b>1315657 se queda en 1018, porque la creación de prestadores no se migra.</li></ul></div>
+  </div>
+</div></section>
+
+<section id="ruta"><div class="wrap">
+  <div class="sh"><span class="num">02</span><div><h2>Hoja de ruta por entidad</h2><p class="sub">La migración de la creación se divide por entidad de OHI, igual que la retroactividad, para que cada historia se valide contra una sola entidad. En cada fila se migra primero la creación y luego se implementa la retroactividad; para Cuentas Médicas la retroactividad no espera a la migración. Orden real de procesamiento: encabezado → grupo → manual → línea.</p></div></div>
+  <div class="egrid" id="egrid"></div>
+</div></section>
+
+<section id="paralelo"><div class="wrap">
+  <div class="sh"><span class="num">03</span><div><h2>Plan actual frente al plan propuesto</h2><p class="sub">A la izquierda, el plan de entregas vigente (13 nov) con el efecto de la propuesta sobre cada historia. A la derecha, cómo queda.</p></div></div>
+  <div class="legend" style="margin-bottom:16px"><span><span class="sw" style="background:var(--del)"></span>× Se elimina</span><span><span class="sw" style="background:var(--chg)"></span>↻ Cambia de alcance</span><span><span class="sw" style="background:var(--new)"></span>+ Nueva</span><span><span class="sw" style="background:var(--keep)"></span>= Sin cambio</span><span><span class="wip" style="margin:0">En progreso</span>estado en Azure</span></div>
+  <div class="boards">
+    <div class="board"><div class="bh"><h3>Plan actual</h3><span>22 historias · 11 en 1018 · 11 en 1020</span></div><div id="bA"></div></div>
+    <div class="board"><div class="bh"><h3>Plan propuesto</h3><span>24 historias · 20 en 1020 · 3 en 1018 · 1 de conmutación</span></div><div id="bN"></div></div>
+  </div>
+</div></section>
+
+<section id="mapeo"><div class="wrap">
+  <div class="sh"><span class="num">04</span><div><h2>Mapeo historia por historia</h2><p class="sub">Filtra por efecto para revisar cada grupo.</p></div></div>
+  <div class="filters" id="fil"></div>
+  <table class="t"><thead><tr><th style="width:100px">ID</th><th>Historia</th><th style="width:90px">Comp.</th><th style="width:130px">Efecto</th><th>Qué cambia</th></tr></thead><tbody id="tab"></tbody></table>
+</div></section>
+
+<section id="nuevas"><div class="wrap">
+  <div class="sh"><span class="num">05</span><div><h2>Historias nuevas y sus dependencias</h2><p class="sub">Las claves P-xx son provisionales. Al crearse en Azure se usará solo su ID.</p></div></div>
+  <div class="card" style="margin-bottom:18px">
+    <svg class="dag dia" viewBox="0 0 1315 320" role="img" aria-label="Dependencias de las historias nuevas">
+<defs><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<text class="s" x="165" y="70" style="font-weight:700">OCP</text><text class="s" x="165" y="86">migración por entidad</text>
+<text class="s" x="165" y="230" style="font-weight:700">ACP</text><text class="s" x="165" y="246">migración por entidad</text>
+<g style="color:var(--ink-2)">
+<path class="ed" d="M150 153C157 153 157 153 161 153" marker-end="url(#am)"/>
+<path class="ed" d="M305 153C317 153 317 73 326 73" marker-end="url(#am)"/>
+<path class="ed" d="M305 153C317 153 317 233 326 233" marker-end="url(#am)"/>
+<path class="ed" d="M470 73C482 73 482 73 491 73" marker-end="url(#am)"/>
+<path class="ed" d="M400 50C400 16 730 16 730 47" marker-end="url(#am)"/>
+<path class="ed" d="M565 96C565 130 895 130 895 99" marker-end="url(#am)"/>
+<path class="ed" d="M800 73C812 73 812 73 821 73" marker-end="url(#am)"/>
+<path class="ed" d="M470 233C482 233 482 233 491 233" marker-end="url(#am)"/>
+<path class="ed" d="M400 256C400 290 730 290 730 259" marker-end="url(#am)"/>
+<path class="ed" d="M565 210C565 176 895 176 895 207" marker-end="url(#am)"/>
+<path class="ed" d="M800 233C812 233 812 233 821 233" marker-end="url(#am)"/>
+<path class="ed" d="M965 73C982 73 982 153 996 153" marker-end="url(#am)"/>
+<path class="ed" d="M965 233C982 233 982 153 996 153" marker-end="url(#am)"/>
+<path class="ed" d="M1140 153C1152 153 1152 153 1161 153" marker-end="url(#am)"/>
+</g>
+<g data-tip="1315697 · cambia: línea base de paridad de 1018"><rect class="nb chg" x="10" y="130" width="140" height="46" rx="11"/><text x="22" y="150">1315697</text><text class="s" x="22" y="166">línea base</text></g>
+<g data-tip="P-01 · identificación del proceso, políticas y validaciones comunes"><rect class="nb new" x="165" y="130" width="140" height="46" rx="11"/><text x="177" y="150">P-01</text><text class="s" x="177" y="166">proceso y validación</text></g>
+<g data-tip="P-02 · migrar OCP: entrada, prestador y encabezado"><rect class="nb new" x="330" y="50" width="140" height="46" rx="11"/><text x="342" y="70">P-02</text><text class="s" x="342" y="86">OCP · entrada</text></g>
+<g data-tip="P-03 · migrar OCP: grupo de prestaciones"><rect class="nb new" x="495" y="50" width="140" height="46" rx="11"/><text x="507" y="70">P-03</text><text class="s" x="507" y="86">OCP · grupo</text></g>
+<g data-tip="P-04 · migrar OCP: manual tarifario"><rect class="nb new" x="660" y="50" width="140" height="46" rx="11"/><text x="672" y="70">P-04</text><text class="s" x="672" y="86">OCP · manual tarifario</text></g>
+<g data-tip="P-05 · migrar OCP: línea de borrador y activación"><rect class="nb new" x="825" y="50" width="140" height="46" rx="11"/><text x="837" y="70">P-05</text><text class="s" x="837" y="86">OCP · línea y /build</text></g>
+<g data-tip="P-06 · migrar ACP: entrada, prestador y encabezado"><rect class="nb new" x="330" y="210" width="140" height="46" rx="11"/><text x="342" y="230">P-06</text><text class="s" x="342" y="246">ACP · entrada</text></g>
+<g data-tip="P-07 · migrar ACP: grupo de prestaciones"><rect class="nb new" x="495" y="210" width="140" height="46" rx="11"/><text x="507" y="230">P-07</text><text class="s" x="507" y="246">ACP · grupo</text></g>
+<g data-tip="P-08 · migrar ACP: manual tarifario"><rect class="nb new" x="660" y="210" width="140" height="46" rx="11"/><text x="672" y="230">P-08</text><text class="s" x="672" y="246">ACP · manual tarifario</text></g>
+<g data-tip="P-09 · migrar ACP: línea de borrador y activación"><rect class="nb new" x="825" y="210" width="140" height="46" rx="11"/><text x="837" y="230">P-09</text><text class="s" x="837" y="246">ACP · línea y /build</text></g>
+<g data-tip="P-10 · conmutar el consumidor de Autorizaciones a 1020"><rect class="nb new" x="1000" y="130" width="140" height="46" rx="11"/><text x="1012" y="150">P-10</text><text class="s" x="1012" y="166">conmutación</text></g>
+<g data-tip="P-11 · retirar los flujos ACP/OCP de 1018"><rect class="nb new" x="1165" y="130" width="140" height="46" rx="11"/><text x="1177" y="150">P-11</text><text class="s" x="1177" y="166">retiro en 1018</text></g>
+</svg>
+  </div>
+  <div class="g3" id="nuevasC" style="grid-template-columns:repeat(auto-fill,minmax(330px,1fr))"></div>
+</div></section>
+
+<section id="abiertas"><div class="wrap">
+  <div class="sh"><span class="num">06</span><div><h2>Para aprobar</h2></div></div>
+  <div class="g2">
+    <div class="card"><h3>Preguntas abiertas</h3><ol class="qs" style="list-style:none;padding:0;margin:0">
+      <li><b>Consumidor real</b> de los endpoints ACP/OCP de 1018: ¿es solo el front de autorizaciones? ¿Quién cambia la URL?</li>
+      <li><b>Línea base de paridad:</b> ¿se migra <code>quality</code> (con <code>codigoClaseServicio</code>, HT-949976) o <code>master</code>?</li>
+      <li><b>Alcance hasta laboratorio:</b> ¿P-11 entra en la Feature o se hace cuando la conmutación llegue a producción?</li>
+      <li><b>Reintentos ante 5xx</b> (D11): ¿se adoptan en 1020 para ambos procesos?</li>
+      <li><b>1315680 en progreso:</b> acordar con su responsable el cierre y adónde llevar el avance.</li>
+      <li><b>Fachada temporal en 1018</b> (reenvío a 1020) solo si la conmutación se retrasa. No se recomienda.</li>
+      <li><b>Pre-decisión (D24):</b> ¿las consultas que usa el front para decidir ACP u OCP se quedan en 1018 (recomendado) o se centralizan en 1020 (historia candidata, fuera del conteo)?</li>
+      <li><b>Definiciones en ACP (D21):</b> ¿Autorizaciones sigue admitiendo SURACUPS y PROPIO, o se unifica con CUPS/CUM?</li>
+      <li><b>Clasificación CUM:</b> 1018 no la valida. ¿1315670/1320786 la exigen también en Autorizaciones?</li></ol></div>
+    <div class="card"><h3>Riesgos</h3><ul class="pc">
+      <li class="c"><b>!</b><span><b>Doble escritura en la transición:</b> mientras el consumidor apunte a 1018, los dos componentes escriben las mismas entidades. No desarrollar retroactividad en 1018 y conmutar de forma atómica por ambiente.</span></li>
+      <li class="c"><b>!</b><span><b>Marca <code>prestacionACP=S</code>:</b> el front decide ACP/OCP con ella vía <code>/prestadoresconvenio</code> de 1018. 1020 debe seguir escribiéndola.</span></li>
+      <li class="c"><b>!</b><span><b>Contrato de errores:</b> el front reacciona a los 400 de 1018. 1020 debe responder los mismos códigos y mensajes, o el front dejará de distinguir un rechazo de negocio de una falla técnica.</span></li>
+      <li class="c"><b>!</b><span><b>Acoplamientos en 1018:</b> <code>direct:encabezadosParaConsumirOHI</code> vive en la clase OCP y lo usan otras rutas. Hay que reubicarlo antes del retiro.</span></li></ul></div>
+  </div>
+  <a class="next" href="../arquitectura/" style="margin-top:22px">
+    <div><div class="muted small" style="font-weight:600">Ver también</div><div style="font-size:20px;font-weight:750;letter-spacing:-.02em">Análisis de arquitectura: por qué dos endpoints con identificación del proceso</div><div class="muted small">Hechos verificados, comparación de contratos, validaciones previas, 24 divergencias y valoración de las alternativas.</div></div>
+    <span class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+</div></section>
+
+</main>
+<footer><div class="wrap">Propuesta sujeta a validación y aprobación · Estados de Azure consultados el 24 nov 2026 · Fuente: <code>analisis-arquitectura.md</code></div></footer>
+
+<script src="../assets/js/common.js" defer></script>
+<script src="../assets/js/plan.js" defer></script>
+</body>
+</html>

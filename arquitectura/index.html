@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análisis de arquitectura · Migración ACP/OCP a 1020</title>
+<meta name="description" content="Análisis de arquitectura para centralizar en 1020 la creación de convenios ACP y OCP de Autorizaciones y Cuentas Médicas.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2a78d6">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/styles.css">
+<script>(function(){var s=localStorage.getItem("acp-theme");document.documentElement.dataset.theme=s||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();</script>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<div id="tip" role="tooltip"></div>
+
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="../" aria-label="Inicio"><span class="mark" aria-hidden="true">AO</span>ACP · OCP <span class="muted" style="font-weight:500">/ Migración a 1020</span></a>
+  <nav class="switch">
+    <a class="on" href="../arquitectura/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="8.5" y="14" width="7" height="7" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></svg><span>Análisis de arquitectura</span></a>
+    <a href="../plan/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="18" r="2"/></svg><span>Plan de migración y trabajo</span></a>
+  </nav>
+  <button class="theme" id="theme" aria-label="Cambiar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div></header>
+
+<main id="contenido">
+<header class="hero"><div class="wrap">
+  <span class="badge"><b>Propuesta</b>Feature 848182 · historias en la Feature 1299679 · 24 nov 2026</span>
+  <h1>Un solo componente para ACP y OCP: <em>dos endpoints que identifican el proceso</em></h1>
+  <p class="lead">El análisis de 1018 (<code>quality</code>) y de 1020 (<code>origin/develop</code>) muestra que los contratos de 1020 nacieron como copia de los de 1018 y que solo una divergencia confirmada es una regla propia del proceso. Las validaciones previas de Autorizaciones no lo cambian: son integridad común o resolución por dato. Se recomienda la alternativa B.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10H7z"/><path d="M3 12h4M17 12h4M12 3v4M12 17v4"/></svg></div><div class="n">2</div><div class="l">endpoints en 1020 (ACP y OCP) para los dos procesos</div></div>
+    <div class="kpi"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12M18 9v12M6 15a6 6 0 0 0 12-6"/></svg></div><div class="n">24</div><div class="l">divergencias clasificadas, incluidas 7 de validaciones previas</div></div>
+    <div class="kpi"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="n" style="color:var(--alt)">1 <span class="muted" style="font-size:20px;font-weight:600">+ 1</span></div><div class="l">regla propia del proceso confirmada (D2) y una por decidir con negocio (D21)</div></div>
+    <div class="kpi"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div><div class="n" style="color:var(--new)">0</div><div class="l">cambios obligatorios para 937-ms (valor por defecto <code>CUENTAS_MEDICAS</code>)</div></div>
+  </div>
+</div></header>
+
+<section id="contexto"><div class="wrap">
+  <div class="sh"><span class="num">01</span><div><h2>De dos implementaciones a un único responsable</h2><p class="sub">Hoy los dos componentes escriben las mismas entidades de OHI con los mismos códigos, cada uno con su propia lógica. Con la decisión de arquitectura, 1020 se queda con toda la creación y la actualización de convenios no estándar.</p></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="panel-h"><h3>Hoy</h3><span class="chip c-del"><i>!</i>dos implementaciones</span></div>
+      <svg class="dia" viewBox="0 0 520 270" role="img" aria-label="Situación actual">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+        <rect class="box" x="10" y="30" width="140" height="50" rx="12"/><text x="24" y="52">Front autorizaciones</text><text class="s" x="24" y="68">decide ACP u OCP</text>
+        <rect class="box" x="10" y="180" width="140" height="50" rx="12"/><text x="24" y="202">937-ms</text><text class="s" x="24" y="218">cuentas médicas</text>
+        <rect class="box warn" x="190" y="30" width="140" height="50" rx="12"/><text x="204" y="52">1018 · ACP / OCP</text><text class="s" x="204" y="68">Camel · retro en quality</text>
+        <rect class="box" x="190" y="180" width="140" height="50" rx="12"/><text x="204" y="202">1020 · ACP / OCP</text><text class="s" x="204" y="218">Spring · hexagonal</text>
+        <rect class="box ohi" x="380" y="85" width="130" height="90" rx="14"/><text x="396" y="112">OHI</text><text class="s" x="396" y="130">grupo · manual</text><text class="s" x="396" y="146">línea de borrador</text><text class="s" x="396" y="162">mismos códigos</text>
+        <g style="color:var(--ink-2)"><path class="ln" d="M150 55H186" marker-end="url(#ar)"/><path class="ln" d="M150 205H186" marker-end="url(#ar)"/><path class="ln" d="M330 55C356 55 352 105 376 105" marker-end="url(#ar)"/><path class="ln" d="M330 205C356 205 352 155 376 155" marker-end="url(#ar)"/></g>
+        <path class="ln red" d="M260 84V176"/><text class="s" x="250" y="124" text-anchor="end" style="fill:var(--del)">dos lógicas,</text><text class="s" x="250" y="139" text-anchor="end" style="fill:var(--del)">mismas entidades</text>
+      </svg>
+    </div>
+    <div class="card">
+      <div class="panel-h"><h3>Propuesto</h3><span class="chip c-acc"><i>✓</i>1020 único responsable</span></div>
+      <svg class="dia" viewBox="0 0 520 270" role="img" aria-label="Situación propuesta">
+        <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+        <rect class="box" x="10" y="30" width="166" height="50" rx="12"/><text x="24" y="52">Front autorizaciones</text><text class="s" x="24" y="68">proceso=AUTORIZACIONES</text>
+        <rect class="box" x="10" y="150" width="166" height="50" rx="12"/><text x="24" y="172">937-ms</text><text class="s" x="24" y="188">sin cambios</text>
+        <rect class="box hl" x="210" y="60" width="140" height="110" rx="14"/><text x="224" y="86">1020</text><text class="s" x="224" y="104">ACP · OCP</text><text class="s" x="224" y="120">política por proceso</text><text class="s" x="224" y="136">núcleo común</text><text class="s" x="224" y="152">retroactividad única</text>
+        <rect class="box dim" x="210" y="205" width="140" height="46" rx="12"/><text x="224" y="225">1018</text><text class="s" x="224" y="240">prestadores y consultas</text>
+        <rect class="box ohi" x="385" y="70" width="125" height="90" rx="14"/><text x="400" y="97">OHI</text><text class="s" x="400" y="115">una sola lógica</text><text class="s" x="400" y="131">de códigos</text>
+        <g style="color:var(--accent)"><path class="ln acc" d="M176 55C192 55 190 90 206 90" marker-end="url(#ar2)"/><path class="ln acc" d="M176 175C192 175 190 140 206 140" marker-end="url(#ar2)"/><path class="ln acc" d="M350 115H381" marker-end="url(#ar2)"/></g>
+        <g style="color:var(--muted)"><path class="ln dot" d="M350 228C375 228 375 160 400 160" marker-end="url(#ar2)"/></g>
+      </svg>
+    </div>
+  </div>
+</div></section>
+
+<section id="hechos"><div class="wrap">
+  <div class="sh"><span class="num">02</span><div><h2>Hechos verificados en el código</h2><p class="sub">Son la base de la decisión; el detalle y la evidencia completa están en <code>insumos/</code>.</p></div></div>
+  <div class="g2" id="facts"></div>
+</div></section>
+
+<section id="contratos"><div class="wrap">
+  <div class="sh"><span class="num">03</span><div><h2>Los contratos ya son el mismo contrato</h2><p class="sub">Comparación campo a campo de las solicitudes de 1018 (rama <code>quality</code>) y 1020 (<code>origin/develop</code>). Los DTO de 1020 ignoran campos desconocidos, así que extender el contrato es compatible hacia atrás.</p></div></div>
+  <div class="legend" style="margin-bottom:18px"><span><span class="sw" style="background:var(--new)"></span>Igual en ambos</span><span><span class="sw" style="background:var(--accent)"></span>Solo en 1020 (opcional)</span><span><span class="sw" style="background:var(--alt)"></span>Solo en 1018</span><span><span class="sw" style="background:var(--chg)"></span>Renombrado</span></div>
+  <div class="g2" id="ctrs"></div>
+</div></section>
+
+<section id="validaciones"><div class="wrap">
+  <div class="sh"><span class="num">04</span><div><h2>Validaciones previas: los dos procesos validan, pero en lugares distintos</h2><p class="sub">Comparación de 1018, del legacy de cuentas médicas (937, <code>origin/master</code>), de 1020 y, para ubicar adónde se migró cada validación del legacy, de 937-ms. Inventarios completos: <code>insumos/validaciones-previas-1018.md</code> (V18-01 a V18-48) e <code>insumos/validaciones-previas-cuentas-medicas.md</code> (VCM-01 a VCM-29).</p></div></div>
+  <div class="card">
+    <div class="panel-h"><h3>Dónde vive cada validación</h3><div class="legend"><span><span class="sw" style="background:var(--accent)"></span>1020</span><span><span class="sw" style="background:var(--del)"></span>1018 (sale)</span><span><span class="sw" style="background:var(--keep)"></span>Se queda en el consumidor</span></div></div>
+    <svg class="dia lanes" viewBox="0 0 1100 350" role="img" aria-label="Ubicación de las validaciones previas por proceso">
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+      <text class="s" x="40" y="22">CONSUMIDOR</text><text class="s" x="290" y="22">PRE-DECISIÓN</text><text class="s" x="560" y="22">VALIDACIONES DE ENTRADA</text><text class="s" x="850" y="22">CREACIÓN EN OHI</text>
+      <text class="s" x="40" y="48" style="fill:var(--ink);font-weight:700">CUENTAS MÉDICAS · HOY</text>
+      <rect class="box" x="40" y="56" width="210" height="56" rx="12"/><text x="54" y="80">937-ms</text><text class="s" x="54" y="97">radicación RIPS y carga masiva</text>
+      <rect class="box dim" x="290" y="56" width="230" height="56" rx="12"/><text x="304" y="80">937-ms · VCM-01 a 14</text><text class="s" x="304" y="97">red, convenida, 10-9-1, ACP u OCP</text>
+      <rect class="box hl" x="560" y="56" width="250" height="56" rx="12"/><text x="574" y="80">1020 · VCM-15 a 29</text><text class="s" x="574" y="97">DTO, definición, especialidad (500)</text>
+      <rect class="box hl" x="850" y="56" width="210" height="56" rx="12"/><text x="864" y="80">1020</text><text class="s" x="864" y="97">no valida si el prestador existe</text>
+      <text class="s" x="40" y="152" style="fill:var(--ink);font-weight:700">AUTORIZACIONES · HOY</text>
+      <rect class="box" x="40" y="160" width="210" height="56" rx="12"/><text x="54" y="184">Front autorizaciones</text><text class="s" x="54" y="201">decide con consultas a 1018</text>
+      <rect class="box dim" x="290" y="160" width="230" height="56" rx="12"/><text x="304" y="184">1018 · V18-28 a 40</text><text class="s" x="304" y="201">/prestadoresconvenio, /prestadores…</text>
+      <rect class="box warn" x="560" y="160" width="250" height="56" rx="12"/><text x="574" y="184">1018 ACP/OCP · V18-01 a 27</text><text class="s" x="574" y="201">prestador 400, 10-9-1, red, manual 400</text>
+      <rect class="box warn" x="850" y="160" width="210" height="56" rx="12"/><text x="864" y="184">1018</text><text class="s" x="864" y="201">escribe con su propia lógica</text>
+      <text class="s" x="40" y="256" style="fill:var(--ink);font-weight:700">AUTORIZACIONES · PROPUESTO</text>
+      <rect class="box" x="40" y="264" width="210" height="56" rx="12"/><text x="54" y="288">Front autorizaciones</text><text class="s" x="54" y="305">proceso=AUTORIZACIONES</text>
+      <rect class="box dim" x="290" y="264" width="230" height="56" rx="12"/><text x="304" y="288">1018 · consultas (se quedan)</text><text class="s" x="304" y="305">lee prestacionACP=S escrita por 1020</text>
+      <rect class="box hl" x="560" y="264" width="250" height="56" rx="12"/><text x="574" y="288">1020 · común + por dato + política</text><text class="s" x="574" y="305">400 con los mensajes de 1018</text>
+      <rect class="box hl" x="850" y="264" width="210" height="56" rx="12"/><text x="864" y="288">1020</text><text class="s" x="864" y="305">núcleo común, ambos procesos</text>
+      <g style="color:var(--ink-2)">
+        <path class="ln" d="M250 84H286" marker-end="url(#ar3)"/><path class="ln" d="M520 84H556" marker-end="url(#ar3)"/><path class="ln" d="M810 84H846" marker-end="url(#ar3)"/>
+        <path class="ln" d="M250 188H286" marker-end="url(#ar3)"/><path class="ln" d="M520 188H556" marker-end="url(#ar3)"/><path class="ln" d="M810 188H846" marker-end="url(#ar3)"/>
+      </g>
+      <g style="color:var(--accent)"><path class="ln acc" d="M250 292H286" marker-end="url(#ar3)"/><path class="ln acc" d="M520 292H556" marker-end="url(#ar3)"/><path class="ln acc" d="M810 292H846" marker-end="url(#ar3)"/></g>
+    </svg>
+  </div>
+  <div class="g3" style="margin-top:18px">
+    <div class="card"><div style="font-size:30px;font-weight:750;letter-spacing:-.03em;color:var(--keep)">14</div><h3>Viven en el orquestador de CM</h3><p class="muted small" style="margin:4px 0 0">VCM-01 a VCM-14 están en 937-ms, no en 1020. 1020 da por hecho que el consumidor ya las resolvió.</p></div>
+    <div class="card"><div style="font-size:30px;font-weight:750;letter-spacing:-.03em;color:var(--keep)">5</div><h3>Endpoints de pre-decisión en 1018</h3><p class="muted small" style="margin:4px 0 0">El front decide ACP u OCP, convenida y tarifa con consultas que no crean nada. Se quedan en 1018 (D24).</p></div>
+    <div class="card"><div style="font-size:30px;font-weight:750;letter-spacing:-.03em;color:var(--new)">4</div><h3>Brechas que 1020 cierra para ambos</h3><p class="muted small" style="margin:4px 0 0">Prestador inexistente, manual tarifario no soportado, formato de fecha y contrato de errores 400 (D19, D22, D23, D25).</p></div>
+  </div>
+  <div class="filters" id="vfil" style="margin-top:22px"></div>
+  <table class="t"><thead><tr><th style="width:200px">Validación</th><th>Autorizaciones · 1018</th><th>CM legacy · 937</th><th>CM hoy · 937-ms / 1020</th><th style="width:220px">Tratamiento en 1020</th></tr></thead><tbody id="vtab"></tbody></table>
+  <div class="g3" style="margin-top:18px">
+    <div class="card"><span class="chip c-acc"><i>✓</i>La decisión B se mantiene</span><p class="muted small" style="margin:10px 0 0">Las validaciones de Autorizaciones son integridad común (se implementa una vez), resolución de datos que no llegan (regla por dato) o, solo en D2 y quizá D21, reglas propias del proceso para la política. No hace falta una ruta por proceso.</p></div>
+    <div class="card"><span class="chip c-chg"><i>!</i>Condición para conmutar</span><p class="muted small" style="margin:10px 0 0">La pre-decisión no viaja con la creación: el front sigue consultando 1018. 1020 debe escribir <code>prestacionACP=S</code> y responder los mismos 400 y mensajes que hoy maneja el front.</p></div>
+    <div class="card"><span class="chip c-keep"><i>i</i>Hallazgo lateral en CM</span><p class="muted small" style="margin:10px 0 0">937-ms perdió frente al legacy ERROR-OHI-024 y 030 en RIPS. Además, toma un error de OHI como «no convenida», lo que puede crear ACP/OCP indebidas. Se registra para tratarlo aparte.</p></div>
+  </div>
+</div></section>
+
+<section id="divergencias"><div class="wrap">
+  <div class="sh"><span class="num">05</span><div><h2>24 divergencias: una regla propia confirmada y una por decidir</h2><p class="sub">Se clasificó cada diferencia para decidir si va a la política del proceso, se unifica para ambos o se corrige como defecto.</p></div></div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="seg" id="seg"></div>
+    <div class="seglab" id="seglab"></div>
+  </div>
+  <div class="filters" id="dfil"></div>
+  <table class="t"><thead><tr><th style="width:56px">#</th><th style="width:170px">Tema</th><th>Autorizaciones · 1018</th><th>Cuentas Médicas · 1020</th><th style="width:150px">Clase</th><th>Tratamiento</th></tr></thead><tbody id="dtab"></tbody></table>
+</div></section>
+
+<section id="alternativas"><div class="wrap">
+  <div class="sh"><span class="num">06</span><div><h2>Alternativas evaluadas</h2><p class="sub">Las dos son compatibles con 937-ms. La diferencia está en cuánto se reutiliza y en cuántas lógicas escriben sobre las mismas entidades de OHI.</p></div></div>
+  <div class="g2">
+    <div class="card opt">
+      <div class="ttl"><span class="chip c-alt"><i>A</i>Alternativa A</span><span class="muted small">4 endpoints</span></div>
+      <h3>ACP y OCP × Cuentas Médicas y Autorizaciones</h3>
+      <div class="mini"><span class="a"></span><span class="a"></span><span class="a"></span><span class="a"></span></div>
+      <ul class="pc">
+        <li class="p"><b>+</b>Aislamiento natural; se puede autorizar y medir por ruta en el gateway.</li>
+        <li class="c"><b>−</b>Duplica dos contratos casi idénticos; el path ACP de Autorizaciones choca con el de Cuentas Médicas.</li>
+        <li class="c"><b>−</b>Copiar los orquestadores duplica unos 14 casos de uso y la retroactividad, con riesgo de entidades paralelas en OHI (PEND-OCP-05).</li>
+        <li class="c"><b>−</b>Tiende a congelar como «diferencia de proceso» lo que en realidad es un defecto de 1018.</li>
+      </ul>
+    </div>
+    <div class="card opt win">
+      <div class="ttl"><span class="chip" style="background:var(--accent);color:#fff"><i>B</i>Recomendada</span><span class="muted small">2 endpoints + proceso</span></div>
+      <h3>ACP y OCP que identifican el proceso</h3>
+      <div class="mini"><span class="b"></span><span class="b"></span></div>
+      <ul class="pc">
+        <li class="p"><b>+</b>Un contrato por flujo, extendido con campos opcionales; 937-ms no cambia.</li>
+        <li class="p"><b>+</b>Un solo constructor de códigos y una sola retroactividad sobre las entidades compartidas.</li>
+        <li class="p"><b>+</b>Las ramas quedan en políticas pequeñas, fáciles de cubrir (~98.9 % de ramas exigido).</li>
+        <li class="c"><b>−</b>Hay que registrar el proceso en los logs; el gateway no puede restringir por proceso.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <div class="panel-h"><div><h3>Valoración por criterio</h3><div class="muted small">Escala cualitativa de 1 (desfavorable) a 5 (favorable), derivada del análisis de ambos componentes. Pasa el cursor sobre los puntos para ver el motivo.</div></div><div class="legend"><span><span class="sw" style="background:var(--alt);border-radius:50%"></span>A · 4 endpoints</span><span><span class="sw" style="background:var(--accent);border-radius:50%"></span>B · 2 endpoints + proceso</span></div></div>
+    <svg class="dumb dia" id="dumb" viewBox="0 0 1100 460"></svg>
+  </div>
+</div></section>
+
+<section id="diseno"><div class="wrap">
+  <div class="sh"><span class="num">07</span><div><h2>Diseño recomendado</h2><p class="sub">La variación entra solo por la política del proceso. Lo que cambia por dato (por ejemplo, el manual referente que llega o no) y las brechas se implementan una vez, para ambos procesos.</p></div></div>
+  <div class="g2">
+    <div class="layers">
+      <div class="layer"><div class="lt">Entrada</div><div class="lc"><span class="pill">POST crear-prestacion-acp</span><span class="pill">POST crear-convenio</span><span class="pill">alias manual → definicion</span><span class="pill">201</span></div></div>
+      <div class="layer"><div class="lt">Proceso</div><div class="lc"><span class="pill">ProcesoConvenio</span><span class="pill">CUENTAS_MEDICAS (por defecto)</span><span class="pill">AUTORIZACIONES</span></div></div>
+      <div class="layer"><div class="lt">Validación común</div><div class="lc"><span class="pill">prestador existe · 400</span><span class="pill">manual soportado · 400</span><span class="pill">formato de fecha · 400</span><span class="pill">especialidad CUPS · 400</span><span class="pill">mensajes de 1018</span></div></div>
+      <div class="layer"><div class="lt">Por dato</div><div class="lc"><span class="pill">contrato 10-9-1</span><span class="pill">manual referente</span><span class="pill">red del prestador</span><span class="pill">solo si no llegan</span></div></div>
+      <div class="layer var"><div class="lt">Política</div><div class="lc"><span class="pill">PoliticaConvenioAcp</span><span class="pill">PoliticaConvenioOcp</span><span class="pill">Map en AppContext</span><span class="pill">hoy: D2</span><span class="pill">D21 si negocio lo decide</span></div></div>
+      <div class="layer core"><div class="lt">Núcleo común</div><div class="lc"><span class="pill">códigos</span><span class="pill">decisión de manual</span><span class="pill">grupo</span><span class="pill">manual tarifario</span><span class="pill">línea de borrador</span><span class="pill">/build</span><span class="pill">idempotencia</span><span class="pill">retroactividad</span></div></div>
+      <div class="layer"><div class="lt">Salida</div><div class="lc"><span class="pill">OHI</span><span class="pill">proceso en logs</span><span class="pill">400 en validaciones</span></div></div>
+    </div>
+    <div>
+<pre class="code"><span class="p">POST</span> /v1/salud/crear-convenio
+{
+  <span class="k">"proceso"</span>: <span class="s">"AUTORIZACIONES"</span>,
+  <span class="k">"codigoPrestador"</span>: <span class="s">"4605942541-001"</span>,
+  <span class="k">"prestacion"</span>: { <span class="k">"codigo"</span>: <span class="s">"890201"</span>, <span class="k">"manual"</span>: <span class="s">"CUPS"</span> },
+  <span class="k">"fechaPrestacionServicio"</span>: <span class="s">"01/11/2026"</span>,
+  <span class="k">"codigoClaseServicio"</span>: <span class="s">"URGE"</span>,
+  <span class="k">"tarifa"</span>: <span class="n">0</span>
+}</pre>
+      <div class="card" style="margin-top:14px">
+        <h3>Reglas del diseño</h3>
+        <ul class="pc">
+          <li class="p"><b>1</b>Se nombra el proceso, no el componente (lección del discriminador <code>origen</code>).</li>
+          <li class="p"><b>2</b>El valor por defecto se asigna en el mapper; 937-ms lo enviará más adelante y entonces el campo se volverá obligatorio.</li>
+          <li class="p"><b>3</b>Nada de <code>if</code> por proceso en los casos de uso: la variación es una política inyectada.</li>
+          <li class="p"><b>4</b>Línea base de paridad: 1018 <code>quality</code> sin las ramas retroactivas, que se reimplementan en 1020.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="antecedente"><div class="wrap">
+  <div class="sh"><span class="num">08</span><div><h2>Antecedente y cronología</h2><p class="sub">El discriminador <code>origen</code> no se retiró por un defecto técnico sino por una premisa de consumidores que esta decisión elimina.</p></div></div>
+  <div class="card"><div class="tl">
+    <div class="ev x"><div class="dot">1</div><div class="d">2 oct 2026</div><div class="w">Se introduce <code>origen</code> (SALUD / CUENTAS_MEDICAS) en 1020 y 937-ms, sin commit</div></div>
+    <div class="ev x"><div class="dot">2</div><div class="d">3 oct 2026</div><div class="w">Se retira: «1018 nunca consume 1020»</div></div>
+    <div class="ev"><div class="dot">3</div><div class="d">5 nov 2026</div><div class="w">Misma nomenclatura de códigos y cada historia en 1018 y 1020</div></div>
+    <div class="ev"><div class="dot">4</div><div class="d">17 nov 2026</div><div class="w">Inicia 1320778 (retro grupo ACP en 1020)</div></div>
+    <div class="ev ok"><div class="dot">5</div><div class="d">24 nov 2026</div><div class="w">ACP/OCP se centraliza en 1020</div></div>
+  </div></div>
+</div></section>
+
+<section id="cierre"><div class="wrap">
+  <div class="sh"><span class="num">09</span><div><h2>Cuándo convendría A, riesgos y preguntas</h2></div></div>
+  <div class="g3">
+    <div class="card"><h3>Cuándo convendría A</h3><p class="muted small" style="margin:6px 0 0">Si la matriz de paridad mostrara que Autorizaciones diverge en la mayoría de los pasos o no comparte entidades de OHI con Cuentas Médicas. Aun así sería una «A delgada»: rutas distintas que llaman a los mismos orquestadores.</p></div>
+    <div class="card"><h3>Riesgos</h3><ul class="pc">
+      <li class="c"><b>!</b>Doble escritura mientras el consumidor siga en 1018: no desarrollar retroactividad en 1018 y conmutar de forma atómica.</li>
+      <li class="c"><b>!</b>La marca <code>prestacionACP=S</code> la usa el front vía 1018; 1020 debe seguir escribiéndola.</li>
+      <li class="c"><b>!</b>Si 1020 no responde los mismos 400 y mensajes, el front deja de distinguir un rechazo de negocio de una falla técnica.</li></ul></div>
+    <div class="card"><h3>Preguntas abiertas</h3><ol class="qs">
+      <li>¿Quién consume hoy los endpoints de 1018?</li><li>¿Línea base <code>quality</code> o <code>master</code>?</li><li>¿El retiro de 1018 entra en la Feature?</li><li>¿Reintentos ante 5xx?</li><li>¿Cierre de 1315680?</li><li>¿Fachada temporal en 1018?</li><li>¿La pre-decisión se queda en 1018 o se centraliza (D24)?</li><li>¿ACP sigue admitiendo SURACUPS y PROPIO (D21)?</li><li>¿Se exige la clasificación CUM en Autorizaciones?</li></ol></div>
+  </div>
+  <a class="next" href="../plan/" style="margin-top:22px">
+    <div><div class="muted small" style="font-weight:600">Siguiente</div><div style="font-size:20px;font-weight:750;letter-spacing:-.02em">Plan de migración y trabajo: 22 → 24 historias, migración por entidad</div><div class="muted small">Qué se elimina, qué cambia y qué se agrega, con el paralelo del plan actual frente al propuesto.</div></div>
+    <span class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+</div></section>
+
+</main>
+<footer><div class="wrap">Propuesta sujeta a validación y aprobación · No se modificó ninguna historia en Azure DevOps · Fuente: <code>analisis-arquitectura.md</code> e <code>insumos/</code></div></footer>
+
+<script src="../assets/js/common.js" defer></script>
+<script src="../assets/js/arquitectura.js" defer></script>
+</body>
+</html>

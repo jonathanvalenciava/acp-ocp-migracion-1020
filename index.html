@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACP · OCP — Migración de Autorizaciones a 1020</title>
+<meta name="description" content="Análisis de arquitectura y plan de trabajo para centralizar ACP y OCP en el componente 1020.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2a78d6">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script>(function(){var s=localStorage.getItem("acp-theme");document.documentElement.dataset.theme=s||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();</script>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<div id="tip" role="tooltip"></div>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="./" aria-label="Inicio"><span class="mark" aria-hidden="true">AO</span>ACP · OCP <span class="muted" style="font-weight:500">/ Migración a 1020</span></a>
+  <nav class="switch">
+    <a href="arquitectura/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="8.5" y="14" width="7" height="7" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></svg><span>Análisis de arquitectura</span></a>
+    <a href="plan/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="18" r="2"/></svg><span>Plan de migración y trabajo</span></a>
+  </nav>
+  <button class="theme" id="theme" aria-label="Cambiar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div></header>
+<main id="contenido">
+<header class="hero"><div class="wrap">
+  <span class="badge"><b>Propuesta</b>Feature 848182 · historias en la Feature 1299679 · 24 nov 2026</span>
+  <h1>ACP y OCP en un solo componente: <em>migración de Autorizaciones a 1020</em></h1>
+  <p class="lead">Documentación de la propuesta para centralizar en 1020 la creación y la actualización retroactiva de convenios no estándar: análisis de arquitectura y nuevo plan de trabajo. Está sujeta a validación y aprobación.</p>
+  <div class="home-cards">
+    <a class="home-card" href="arquitectura/">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="8.5" y="14" width="7" height="7" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></svg></span>
+      <h2>Análisis de arquitectura</h2>
+      <p class="muted">Hechos verificados en el código, comparación de contratos, validaciones previas, 24 divergencias y valoración de las alternativas. Recomendación: dos endpoints que identifican el proceso.</p>
+      <span class="go">Ver análisis <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+    <a class="home-card" href="plan/">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="18" r="2"/></svg></span>
+      <h2>Plan de migración y trabajo</h2>
+      <p class="muted">De 22 a 24 historias: migración de la creación por entidad, conmutación, retiro en 1018 y retroactividad para ambos procesos, con el paralelo del plan actual y el propuesto.</p>
+      <span class="go">Ver plan <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+  </div>
+</div></header>
+</main>
+<footer><div class="wrap">Propuesta sujeta a validación y aprobación.</div></footer>
+<script src="assets/js/common.js" defer></script>
+</body>
+</html>
