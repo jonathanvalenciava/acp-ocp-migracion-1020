@@ -7,8 +7,8 @@
 <meta name="description" content="Análisis de arquitectura para centralizar en 1020 la creación de convenios ACP y OCP de Autorizaciones y Cuentas Médicas.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#2a78d6">
-<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/styles.css">
+<link rel="icon" href="../assets/img/favicon.svg?v=dd98e9fa86" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/styles.css?v=3dfd5be554">
 <script>(function(){var s=localStorage.getItem("acp-theme");document.documentElement.dataset.theme=s||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();</script>
 </head>
 <body>
@@ -65,8 +65,8 @@
   <div class="g3">
     <div class="card"><span class="chip c-new"><i>✓</i>Se conserva del análisis</span><ul class="pc">
       <li class="p"><b>1</b>Un solo constructor de códigos y una sola retroactividad sobre las entidades compartidas.</li>
-      <li class="p"><b>2</b>La regla propia del proceso (D2) como política, sin condicionales en los casos de uso (M-05).</li>
-      <li class="p"><b>3</b>Reglas por dato (D4, D20) y brechas cerradas para los dos procesos (M-03, M-04).</li></ul></div>
+      <li class="p"><b>2</b>La regla propia del proceso (D2) como política, sin condicionales en los casos de uso (M-OCP-3).</li>
+      <li class="p"><b>3</b>Reglas por dato (D4, D20) y brechas cerradas para los dos procesos (historias de entrada M-OCP-1 y M-ACP-1).</li></ul></div>
     <div class="card"><span class="chip c-chg"><i>↻</i>Cambia frente a la recomendación B</span><ul class="pc">
       <li class="p"><b>1</b>El proceso sale de la ruta: sin campo <code>proceso</code> ni enum. El contrato de entrada es el de 1018 en PDN (DEC-3).</li>
       <li class="p"><b>2</b>El prefijo <code>/autorizaciones/</code> evita el choque del path ACP que se señalaba contra A.</li>
@@ -274,7 +274,7 @@
 </main>
 <footer><div class="wrap">Estrategia aprobada el 25 nov 2026 · No se modificó ninguna historia en Azure DevOps · Fuente: <code>analisis-arquitectura.md</code> e <code>insumos/</code></div></footer>
 
-<script src="../assets/js/common.js" defer></script>
-<script src="../assets/js/arquitectura.js" defer></script>
+<script src="../assets/js/common.js?v=2730612cad" defer></script>
+<script src="../assets/js/arquitectura.js?v=a5cef2d835" defer></script>
 </body>
 </html>
