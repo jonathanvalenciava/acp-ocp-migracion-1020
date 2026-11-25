@@ -38,7 +38,7 @@ const D=[
  ["D8","Cláusula activa OCP","PUT providerpricingclauses + build","No existe","brecha","Decidir en 1315687 para ambos procesos"],
  ["D9","Forma del PUT de la línea","Campos parciales sin {\"value\":…}","Forma del legacy sin nulos","brecha","Prevalece 1020"],
  ["D10","Idempotencia","ACP: 409 / «ya existe»","GEN-ORA-00001","brecha","Prevalece 1020; confirmar el error de OHI"],
- ["D11","Reintentos 5xx","OCP: 5 con backoff; ACP: ninguno","Ninguno","brecha","Decisión transversal (pregunta abierta)"],
+ ["D11","Reintentos 5xx","OCP: 5 con backoff; ACP: ninguno","Ninguno","brecha","Decisión transversal (DEC-5)"],
  ["D12","Especialidad","PATCH al prestador; 400 si falta","La registra; si falta, 500","igual","Reutilizar y responder 400"],
  ["D13","Marca prestacionACP=S","La escribe ACP; la lee /prestadoresconvenio","La escribe","igual","Requisito: no romperla"],
  ["D15","Respuesta","201 vacía","ACP 201 con cuerpo; OCP 200","ctr","Unificar a 201"],
@@ -50,7 +50,7 @@ const D=[
  ["D21","Definiciones admitidas en ACP","Admite SURACUPS y *PROPIO* (V18-13)","Solo CUPS o CUM (VCM-17)","pro","Decisión de negocio: unificar o pasar a la política (por confirmar)"],
  ["D22","Manual tarifario no soportado","400 «no configurado» (V18-12)","Excepción (500)","brecha","400 para ambos"],
  ["D23","Contrato de errores","400 con mensajes que el front interpreta","500 en DTO y especialidad (VCM-15, VCM-21)","ctr","Conservar códigos y mensajes de 1018; 400 para ambos"],
- ["D24","Pre-decisión ACP/OCP","El front consulta endpoints de 1018 (V18-28 a 40)","La hace 937-ms (VCM-08 a 13)","ctr","Se queda en el consumidor (pregunta abierta)"],
+ ["D24","Pre-decisión ACP/OCP","El front consulta endpoints de 1018 (V18-28 a 40)","La hace 937-ms (VCM-08 a 13)","ctr","Se queda en el consumidor: en 1018 para Autorizaciones"],
  ["D25","Formato de la fecha","400 con dd/MM/yyyy tolerante (V18-06)","Solo @NotBlank","brecha","Validar el formato en 1020 (400)"]];
 const tv={comun:["Común","c-new","="],dato:["Por dato","c-acc","↻"],pol:["Política","c-alt","!"],cons:["Consumidor","c-keep","·"],neg:["Decisión de negocio","c-chg","?"]};
 const V=[
@@ -76,8 +76,9 @@ document.querySelectorAll("#vfil button").forEach(b=>b.onclick=()=>{vf=b.dataset
 const order=["pro","igual","brecha","ctr"],cnt={};D.forEach(d=>cnt[d[4]]=(cnt[d[4]]||0)+1);
 document.getElementById("seg").innerHTML=order.map(k=>`<div data-tip="<b>${cls[k][0]}</b>: ${cnt[k]} · ${D.filter(d=>d[4]===k).map(d=>d[0]).join(", ")}" style="flex:${cnt[k]};background:${cls[k][1]}">${cnt[k]}</div>`).join("");
 document.getElementById("seglab").innerHTML=order.map(k=>`<div style="flex:${cnt[k]}"><b>${cls[k][0]}</b>${D.filter(d=>d[4]===k).map(d=>d[0]).join(" · ")}</div>`).join("");
+const DH={D1:"M-02",D2:"DEC-1 · M-05 o 1315643",D3:"M-10",D4:"M-04",D5:"Reutilizar",D6:"M-04",D7:"M-06",D8:"M-06",D9:"Sin historia",D10:"M-06",D11:"DEC-5 · M-07",D12:"M-03",D13:"M-06",D15:"M-02",D16:"M-06",D17:"M-06",D18:"Fuera de 1020",D19:"M-03",D20:"M-04",D21:"DEC-2 · M-04",D22:"M-03",D23:"M-03",D24:"1018 (M-13 la conserva)",D25:"M-03"};
 let df="todas";
-const dt=()=>document.getElementById("dtab").innerHTML=D.filter(d=>df==="todas"||d[4]===df).map(d=>`<tr><td><b>${d[0]}</b></td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><span class="chip ${cls[d[4]][2]}"><i>${cls[d[4]][3]}</i>${cls[d[4]][0]}</span></td><td>${d[5]}</td></tr>`).join("");
+const dt=()=>document.getElementById("dtab").innerHTML=D.filter(d=>df==="todas"||d[4]===df).map(d=>`<tr><td><b>${d[0]}</b></td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><span class="chip ${cls[d[4]][2]}"><i>${cls[d[4]][3]}</i>${cls[d[4]][0]}</span></td><td>${d[5]}</td><td><b>${DH[d[0]]||"—"}</b></td></tr>`).join("");
 document.getElementById("dfil").innerHTML=[["todas","Todas"],...order.map(k=>[k,cls[k][0]])].map(([k,l])=>`<button data-k="${k}" class="${k==="todas"?"on":""}">${l}</button>`).join("");
 document.querySelectorAll("#dfil button").forEach(b=>b.onclick=()=>{df=b.dataset.k;document.querySelectorAll("#dfil button").forEach(x=>x.classList.toggle("on",x===b));dt()});dt();
 

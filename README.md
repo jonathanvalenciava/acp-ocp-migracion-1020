@@ -33,5 +33,5 @@ python -m http.server 8000
 
 ## Estado
 
-Es una propuesta sujeta a validación y aprobación. Las páginas usan `noindex` y `robots.txt` para que los buscadores no
+La estrategia se aprobó el 25 de noviembre de 2026 y el plan está pendiente de cargar en Azure DevOps. Las páginas usan `noindex` y `robots.txt` para que los buscadores no
 las indexen.

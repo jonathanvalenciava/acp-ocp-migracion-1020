@@ -232,6 +232,13 @@ a.wi:hover{color:var(--accent);text-decoration-style:solid}
 .egrid .sep{grid-column:1/-1;height:1px;background:var(--line);margin:6px 0}
 @media (max-width:1000px){.egrid{grid-template-columns:1fr}.egrid .span4{grid-column:auto}.egrid .hd{display:none}}
 
+.road.r7{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.stage .ids .small{align-self:center}
+.idp{white-space:nowrap}
+#trazabilidad .g2{grid-template-columns:5fr 7fr}
+#egrid{grid-template-columns:150px repeat(4,minmax(0,1fr))}
+@media (max-width:1000px){#trazabilidad .g2{grid-template-columns:1fr}#egrid{grid-template-columns:1fr}}
+
 .skip{position:absolute;left:-999px;top:8px;z-index:200;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:10px;text-decoration:none;font-weight:600}
 .skip:focus{left:12px}
 .brand{text-decoration:none;color:inherit}
