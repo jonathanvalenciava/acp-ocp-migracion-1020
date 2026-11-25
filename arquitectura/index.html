@@ -60,7 +60,7 @@
   </div>
   <table class="t" style="margin-bottom:18px"><thead><tr><th style="width:230px">Proceso</th><th>ACP</th><th>OCP</th><th style="width:250px">Consumidor</th></tr></thead><tbody>
     <tr><td><b>Cuentas Médicas</b><div class="muted small">existentes, sin cambio</div></td><td><code>POST /v1/salud/crear-prestacion-acp</code></td><td><code>POST /v1/salud/crear-convenio</code></td><td>937-ms</td></tr>
-    <tr><td><b>Autorizaciones</b><div class="muted small">nuevas (M-02)</div></td><td><code>POST /v1/salud/autorizaciones/crear-prestacion-acp</code></td><td><code>POST /v1/salud/autorizaciones/crear-convenio</code></td><td>Front de reclamaciones vida, con el toggle prendido</td></tr>
+    <tr><td><b>Autorizaciones</b><div class="muted small">nuevas (M-OCP-1 y M-ACP-1)</div></td><td><code>POST /v1/salud/autorizaciones/crear-prestacion-acp</code></td><td><code>POST /v1/salud/autorizaciones/crear-convenio</code></td><td>Front de reclamaciones vida, con el toggle prendido</td></tr>
   </tbody></table>
   <div class="g3">
     <div class="card"><span class="chip c-new"><i>✓</i>Se conserva del análisis</span><ul class="pc">
@@ -76,7 +76,7 @@
       <li class="p"><b>2</b>Toggle en el front, no en 1018 y sin fachada. La pre-decisión se queda en 1018.</li>
       <li class="p"><b>3</b>Retroactividad solo en 1020, que sale a PDN después de activar el toggle (M-11).</li></ul></div>
   </div>
-  <p class="muted small" style="margin:18px 0 0">Las secciones 01 a 09 se conservan como el análisis que llevó a la decisión; donde algo quedó superado se indica. El plan final (13 historias nuevas, 6 decisiones pendientes) está en la página del plan.</p>
+  <p class="muted small" style="margin:18px 0 0">Las secciones 01 a 09 se conservan como el análisis que llevó a la decisión; donde algo quedó superado se indica. El plan final (migración por flujo y entidad, 16 historias nuevas y 6 decisiones pendientes) está en la página del plan.</p>
 </div></section>
 
 <section id="contexto"><div class="wrap">
@@ -159,7 +159,7 @@
   <div class="filters" id="vfil" style="margin-top:22px"></div>
   <table class="t"><thead><tr><th style="width:200px">Validación</th><th>Autorizaciones · 1018</th><th>CM legacy · 937</th><th>CM hoy · 937-ms / 1020</th><th style="width:220px">Tratamiento en 1020</th></tr></thead><tbody id="vtab"></tbody></table>
   <div class="g3" style="margin-top:18px">
-    <div class="card"><span class="chip c-acc"><i>✓</i>Un núcleo común basta</span><p class="muted small" style="margin:10px 0 0">Las validaciones de Autorizaciones son integridad común (se implementa una vez, M-03), resolución de datos que no llegan (regla por dato, M-04) o, solo en D2 y quizá D21, reglas propias del proceso para la política (M-05). Las rutas por proceso aprobadas las reutilizan sin duplicar lógica.</p></div>
+    <div class="card"><span class="chip c-acc"><i>✓</i>Un núcleo común basta</span><p class="muted small" style="margin:10px 0 0">Las validaciones de Autorizaciones son integridad común (se implementa una vez en las historias de entrada), resolución de datos que no llegan (regla por dato, M-ACP-1) o, solo en D2 y quizá D21, reglas propias del proceso para la política (M-OCP-3). Las rutas por proceso aprobadas las reutilizan sin duplicar lógica.</p></div>
     <div class="card"><span class="chip c-chg"><i>!</i>Condición para conmutar</span><p class="muted small" style="margin:10px 0 0">La pre-decisión no viaja con la creación: el front sigue consultando 1018. 1020 debe escribir <code>prestacionACP=S</code> y responder los mismos 400 y mensajes que hoy maneja el front.</p></div>
     <div class="card"><span class="chip c-keep"><i>i</i>Hallazgo lateral en CM</span><p class="muted small" style="margin:10px 0 0">937-ms perdió frente al legacy ERROR-OHI-024 y 030 en RIPS. Además, toma un error de OHI como «no convenida», lo que puede crear ACP/OCP indebidas. Se registra para tratarlo aparte.</p></div>
   </div>
@@ -215,7 +215,7 @@
       <div class="layer"><div class="lt">Entrada · Aut.</div><div class="lc"><span class="pill">POST autorizaciones/crear-prestacion-acp</span><span class="pill">POST autorizaciones/crear-convenio</span><span class="pill">alias manual → definicion</span><span class="pill">201 sin cuerpo</span></div></div>
       <div class="layer"><div class="lt">Validación común</div><div class="lc"><span class="pill">prestador existe · 400</span><span class="pill">manual soportado · 400</span><span class="pill">formato de fecha · 400</span><span class="pill">especialidad CUPS · 400</span><span class="pill">mensajes de 1018</span></div></div>
       <div class="layer"><div class="lt">Por dato</div><div class="lc"><span class="pill">contrato 10-9-1</span><span class="pill">manual referente</span><span class="pill">red del prestador</span><span class="pill">solo si no llegan</span></div></div>
-      <div class="layer var"><div class="lt">Política</div><div class="lc"><span class="pill">política según la ruta</span><span class="pill">hoy: D2 (M-05)</span><span class="pill">D21 si negocio lo decide</span></div></div>
+      <div class="layer var"><div class="lt">Política</div><div class="lc"><span class="pill">política según la ruta</span><span class="pill">hoy: D2 (M-OCP-3)</span><span class="pill">D21 si negocio lo decide</span></div></div>
       <div class="layer core"><div class="lt">Núcleo común</div><div class="lc"><span class="pill">códigos</span><span class="pill">decisión de manual</span><span class="pill">grupo</span><span class="pill">manual tarifario</span><span class="pill">línea de borrador</span><span class="pill">/build</span><span class="pill">idempotencia</span><span class="pill">retroactividad</span></div></div>
       <div class="layer"><div class="lt">Salida</div><div class="lc"><span class="pill">OHI</span><span class="pill">timeouts y límite por proceso</span><span class="pill">proceso y consumidor en logs</span><span class="pill">400 en validaciones</span></div></div>
     </div>
@@ -266,7 +266,7 @@
       <li>Consumidor de 1018: <b>front de reclamaciones vida</b> (M-09).</li><li>Línea base: <b>PDN (master)</b>, con M-01.</li><li>Retiro de 1018: <b>sí</b>, M-13.</li><li>Reintentos ante 5xx: <i>pendiente</i>, DEC-5.</li><li>1315680: <b>pausar</b>; su diseño pasa a 1315674.</li><li>Fachada en 1018: <b>descartada</b>.</li><li>Pre-decisión: <b>se queda en 1018</b>.</li><li>SURACUPS y PROPIO en ACP: <i>pendiente</i>, DEC-2.</li><li>Clasificación CUM en Autorizaciones: <i>pendiente</i>.</li></ol></div>
   </div>
   <a class="next" href="../plan/" style="margin-top:22px">
-    <div><div class="muted small" style="font-weight:600">Siguiente</div><div style="font-size:20px;font-weight:750;letter-spacing:-.02em">Plan final: 22 → 26 historias en seis fases</div><div class="muted small">Qué se cierra, qué cambia y qué se crea, con la trazabilidad del plan v1 al plan final y las decisiones pendientes.</div></div>
+    <div><div class="muted small" style="font-weight:600">Siguiente</div><div style="font-size:20px;font-weight:750;letter-spacing:-.02em">Plan final: migración por flujo y entidad, 22 → 29 historias</div><div class="muted small">Hoja de ruta por entidad, qué se cierra, cambia y crea, y los puntos de esfuerzo sincronizados con el tablero.</div></div>
     <span class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
   </a>
 </div></section>

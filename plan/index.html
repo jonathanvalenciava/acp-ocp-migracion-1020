@@ -27,13 +27,13 @@
 <main id="contenido">
 <header class="hero"><div class="wrap">
   <span class="badge"><b>Estrategia aprobada</b>Feature 1299679 · plan final · 25 nov 2026</span>
-  <h1>Cuatro endpoints en 1020, <em>13 historias nuevas en seis fases</em></h1>
-  <p class="lead">El plan final de la Feature 1299679 tras aprobarse la estrategia de 4 endpoints: Autorizaciones entra por rutas propias y comparte el núcleo con Cuentas Médicas, el front conmuta con un toggle por ambiente y la retroactividad se hace una sola vez, en 1020. Todavía no se cargó nada en Azure DevOps.</p>
+  <h1>Migración por flujo y entidad: <em>primero la creación de Reclamaciones, después la retroactividad</em></h1>
+  <p class="lead">La creación de ACP y OCP de Reclamaciones pasa de 1018 a 1020 entidad por entidad, igual que la retroactividad. La retroactividad de cada entidad empieza cuando su migración está garantizada. Cuentas Médicas ya está en 1020 y solo necesita la retroactividad. Todavía no se cargó nada en Azure DevOps.</p>
   <div class="kpis">
-    <div class="kpi"><div class="n">22 <span class="muted" style="font-weight:400">→</span> 26</div><div class="l">historias activas en la Feature</div></div>
+    <div class="kpi"><div class="n">22 <span class="muted" style="font-weight:400">→</span> 29</div><div class="l">historias en el plan de la Feature</div></div>
     <div class="kpi"><div class="n" style="color:var(--del)">9</div><div class="l">se cierran: la retroactividad en 1018</div></div>
     <div class="kpi"><div class="n" style="color:var(--chg)">12 <span class="muted" style="font-size:20px;font-weight:600">+ 1</span></div><div class="l">cambian de alcance, más 1315657 en revisión</div></div>
-    <div class="kpi"><div class="n" style="color:var(--new)">13</div><div class="l">nuevas (M-01 a M-13) · 50 puntos · unas 6 semanas hasta el toggle en PDN</div></div>
+    <div class="kpi"><div class="n" style="color:var(--new)">16</div><div class="l">nuevas: 8 de migración por flujo y entidad, 8 transversales</div></div>
   </div>
 </div></header>
 
@@ -41,67 +41,79 @@
   <div class="sh"><span class="num">01</span><div><h2>Qué pasa con cada historia</h2><p class="sub">Del plan vigente en Azure al plan final. Pasa el cursor sobre cada banda para ver las historias.</p></div></div>
   <div class="card">
     <div class="legend" style="margin-bottom:10px"><span><span class="sw" style="background:var(--del)"></span>× Se cierra</span><span><span class="sw" style="background:var(--chg)"></span>↻ Cambia</span><span><span class="sw" style="background:var(--violet)"></span>? En revisión</span><span><span class="sw" style="background:var(--new)"></span>+ Nueva</span></div>
-    <svg class="sankey dia" id="sankey" viewBox="0 0 1100 470"></svg>
+    <svg class="sankey dia" id="sankey" viewBox="0 0 1100 510"></svg>
   </div>
   <div class="g2" style="margin-top:18px">
-    <div class="card"><h3>Historias por componente</h3><p class="muted small" style="margin:0 0 16px">1020 concentra la construcción y la retroactividad. En 1018 quedan el backport, el retiro, la revisión de su análisis y la creación del prestador.</p>
+    <div class="card"><h3>Historias por componente</h3><p class="muted small" style="margin:0 0 16px">1020 concentra la migración por entidad, lo transversal del servicio y la retroactividad. En 1018 quedan el backport, el retiro, la revisión de su análisis y la creación del prestador.</p>
       <div class="compbar" id="comp"></div></div>
     <div class="card"><h3>Lectura rápida</h3><ul class="pc">
-      <li class="c"><b>×</b>Las 9 HT «Implementar en 1018» se cierran: las absorbe su gemela de 1020. 1315680 está en progreso: se pausa y su diseño pasa a 1315674.</li>
-      <li class="p"><b>↻</b>Las 11 de 1020 aplican a los dos procesos. 1315697 actualiza su CA-04 con esta ruta y registra la decisión en el CA-05.</li>
-      <li class="p"><b>+</b>13 nuevas por responsabilidad: backport en 1018, siete piezas en 1020, toggle en el front, matriz de paridad, activación, retroactividad validada desde Autorizaciones y retiro.</li>
-      <li class="p"><b>?</b>1315657 trata la creación del prestador, no la del convenio: se revisa su alcance antes de cargar el plan.</li></ul></div>
+      <li class="c"><b>×</b>Las 9 HT «Implementar en 1018» se cierran: las absorbe su gemela de 1020. 1315680 está en progreso; se pausa y su diseño pasa a 1315674.</li>
+      <li class="p"><b>+</b>8 historias migran la creación de Reclamaciones: 4 por flujo, una por entidad (entrada, grupo, manual y línea), en el orden real de procesamiento.</li>
+      <li class="p"><b>↻</b>Cada HT de retroactividad aplica a los dos procesos. Para Cuentas Médicas no espera nada; su criterio de Reclamaciones espera a la migración de su entidad.</li>
+      <li class="p"><b>+</b>8 transversales: backport en 1018, resiliencia y exposición en 1020, toggle en el front, matriz de paridad, activación, retroactividad validada desde Reclamaciones y retiro.</li>
+      <li class="p"><b>?</b>1315657 trata la creación del prestador, no la del convenio: se revisa su alcance.</li></ul></div>
   </div>
 </div></section>
 
-<section id="fases"><div class="wrap">
-  <div class="sh"><span class="num">02</span><div><h2>Seis fases, en secuencia</h2><p class="sub">Cada fase depende de la anterior, salvo la 1 y la 2, que avanzan en paralelo. La fase 2 (23 puntos) marca el ritmo: con un desarrollador en 1020, otro en 1018 y el front arrancando al final de la fase 2, el toggle se prende en PDN en unas 6 semanas.</p></div></div>
-  <div class="card" style="margin-bottom:18px">
-    <div class="panel-h"><h3>Puntos por fase</h3><span class="muted small">50 puntos nuevos · 1 punto = 1 día de un desarrollador · sin las HT existentes de 1020</span></div>
-    <div class="seg" id="seg"></div>
-    <div class="seglab" id="seglab"></div>
-  </div>
-  <div class="road r7" id="road"></div>
+<section id="ruta"><div class="wrap">
+  <div class="sh"><span class="num">02</span><div><h2>Hoja de ruta por entidad</h2><p class="sub">Dos carriles por entidad y por flujo. Primero se garantiza la creación de Reclamaciones (migración) y luego se implementa la retroactividad para los dos procesos. Cuentas Médicas solo tiene carril de retroactividad, porque su creación ya vive en 1020.</p></div></div>
+  <div class="egrid" id="egrid"></div>
+  <div class="road r7" id="road" style="margin-top:26px"></div>
 </div></section>
 
 <section id="paralelo"><div class="wrap">
-  <div class="sh"><span class="num">03</span><div><h2>Plan vigente frente al plan final</h2><p class="sub">A la izquierda, las entregas vigentes en Azure (13 nov), con el efecto sobre cada historia. A la derecha, cómo queda el plan por fase.</p></div></div>
+  <div class="sh"><span class="num">03</span><div><h2>Plan vigente frente al plan final</h2><p class="sub">A la izquierda, las entregas vigentes en Azure (13 nov), con el efecto sobre cada historia. A la derecha, el plan final por fase.</p></div></div>
   <div class="legend" style="margin-bottom:16px"><span><span class="sw" style="background:var(--del)"></span>× Se cierra</span><span><span class="sw" style="background:var(--chg)"></span>↻ Cambia de alcance</span><span><span class="sw" style="background:var(--violet)"></span>? En revisión</span><span><span class="sw" style="background:var(--new)"></span>+ Nueva</span><span><span class="wip" style="margin:0">En progreso</span>estado en Azure</span></div>
   <div class="boards">
     <div class="board"><div class="bh"><h3>Plan vigente</h3><span>22 historias · 11 en 1018 · 11 en 1020</span></div><div id="bA"></div></div>
-    <div class="board"><div class="bh"><h3>Plan final</h3><span>26 historias · 18 en 1020 · 4 en 1018 · 1 front · 3 QA y operación</span></div><div id="bN"></div></div>
+    <div class="board"><div class="bh"><h3>Plan final</h3><span>29 historias · 21 en 1020 · 4 en 1018 · 1 front · 3 QA y operación</span></div><div id="bN"></div></div>
+  </div>
+</div></section>
+
+<section id="puntos"><div class="wrap">
+  <div class="sh"><span class="num">04</span><div><h2>Puntos de esfuerzo del tablero</h2><p class="sub" id="psub"></p></div></div>
+  <div class="kpis" id="pk" style="margin-top:0"></div>
+  <div class="card" style="margin-top:18px">
+    <div class="panel-h"><h3>Historias del plan estimadas y sin estimación</h3><span class="muted small" id="pchk"></span></div>
+    <div class="seg" id="pseg"></div>
+    <div class="legend" style="margin-top:12px"><span><span class="sw" style="background:var(--new)"></span>Estimada en el tablero</span><span><span class="sw" style="background:var(--chg)"></span>En el tablero, sin estimación</span><span><span class="sw" style="background:var(--keep)"></span>Propuesta: sin puntos hasta crearse</span></div>
+  </div>
+  <div class="g2" style="margin-top:18px">
+    <div><table class="t"><thead><tr><th style="width:96px">Historia</th><th>Tema</th><th style="width:96px">Estado</th><th style="width:90px">Puntos</th></tr></thead><tbody id="ptab"></tbody></table></div>
+    <div>
+      <div class="card"><h3>Cómo se suma</h3><ul class="pc">
+        <li class="p"><b>1</b>Suman solo las historias del plan que existen en el tablero y tienen puntos en <code>Puntos de esfuerzo</code>.</li>
+        <li class="p"><b>2</b>Las 16 propuestas no tienen puntos. Al crearse en Azure se registra su ID y, en la siguiente sincronización, sus puntos entran en la suma.</li>
+        <li class="p"><b>3</b>Estimadas + sin estimación = total de historias del plan.</li>
+        <li class="p"><b>4</b>Las historias que se cierran no suman; se muestran aparte.</li></ul></div>
+      <div class="card" style="margin-top:14px"><h3>Propuestas, sin puntos</h3><div class="ids" id="pprop" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div></div>
+      <div class="card" style="margin-top:14px"><h3>Salen del plan al cerrarse</h3><p class="muted small" id="pcl" style="margin:6px 0 10px"></p><div class="ids" id="pclids" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>
+    </div>
   </div>
 </div></section>
 
 <section id="mapeo"><div class="wrap">
-  <div class="sh"><span class="num">04</span><div><h2>Mapeo historia por historia</h2><p class="sub">Efecto final de cada historia, comparado con lo que proponía el plan v1 del 24 de noviembre. Filtra por efecto.</p></div></div>
+  <div class="sh"><span class="num">05</span><div><h2>Mapeo historia por historia</h2><p class="sub">Efecto final de cada historia, su entidad y flujo, y los puntos del tablero. Filtra por efecto.</p></div></div>
   <div class="filters" id="fil"></div>
-  <table class="t"><thead><tr><th style="width:96px">ID</th><th>Historia</th><th style="width:80px">Comp.</th><th style="width:120px">Efecto</th><th style="width:70px">Fase</th><th>Qué cambia</th><th style="width:180px">Frente a v1</th></tr></thead><tbody id="tab"></tbody></table>
+  <table class="t"><thead><tr><th style="width:96px">ID</th><th>Historia</th><th style="width:80px">Comp.</th><th style="width:120px">Efecto</th><th style="width:150px">Entidad · flujo</th><th>Qué cambia</th><th style="width:80px">Puntos</th></tr></thead><tbody id="tab"></tbody></table>
 </div></section>
 
 <section id="nuevas"><div class="wrap">
-  <div class="sh"><span class="num">05</span><div><h2>Historias nuevas y sus dependencias</h2><p class="sub">Las claves M-xx son provisionales: al crearse en Azure se usará solo su ID. «Adicional» marca las tareas del artefacto sin equivalente en el plan v1.</p></div></div>
+  <div class="sh"><span class="num">06</span><div><h2>Dependencias por flujo y entidad</h2><p class="sub">Cada flujo migra sus entidades en orden: entrada → grupo → manual → línea. Cada HT de retroactividad depende de la migración de su entidad. Las claves M-xx son provisionales.</p></div></div>
   <div class="card" style="margin-bottom:18px">
-    <div class="legend" style="margin-bottom:8px"><span><span class="sw" style="background:var(--new)"></span>Nueva</span><span><span class="sw" style="background:var(--chg)"></span>Existente que cambia</span><span><span class="sw" style="background:var(--keep)"></span>Decisiones o grupo de historias</span><span style="gap:6px"><svg width="26" height="8"><path d="M0 4H26" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="4 4"/></svg>dependencia de fase</span></div>
-    <svg class="dag dia" id="dag" viewBox="0 0 1160 500" role="img" aria-label="Dependencias de las historias nuevas"></svg>
+    <div class="legend" style="margin-bottom:8px"><span><span class="sw" style="background:var(--new)"></span>Nueva</span><span><span class="sw" style="background:var(--chg)"></span>Existente que cambia</span><span style="gap:6px"><svg width="26" height="8"><path d="M0 4H26" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="4 4"/></svg>va junto o dependencia de fase</span></div>
+    <svg class="dag dia" id="dag" viewBox="0 0 1300 500" role="img" aria-label="Dependencias por flujo y entidad"></svg>
   </div>
   <div class="g3" id="nuevasC" style="grid-template-columns:repeat(auto-fill,minmax(330px,1fr))"></div>
 </div></section>
 
 <section id="trazabilidad"><div class="wrap">
-  <div class="sh"><span class="num">06</span><div><h2>Del plan v1 al plan final</h2><p class="sub">El plan v1 dividía la migración por entidad porque cada historia construía un paso del flujo. Con 4 endpoints, ese flujo ya existe en 1020: las rutas de Autorizaciones lo reutilizan y el trabajo pasa a ser transversal.</p></div></div>
-  <div class="g2">
-    <div><table class="t"><thead><tr><th style="width:70px">v1</th><th>Alcance en v1</th><th style="width:170px">Pasa a</th></tr></thead><tbody id="pmap"></tbody></table></div>
-    <div>
-      <div class="card"><h3>La validación por entidad se conserva</h3><p class="muted small" style="margin:4px 0 14px">Pedido del 24 de noviembre: que ninguna historia sea una migración total difícil de validar. Cada entidad se prueba por separado en tres lugares.</p>
-        <div class="egrid" id="egrid"></div>
-        <p class="muted small" style="margin:14px 0 0"><b style="color:var(--ink)">Propuesta pendiente de validar:</b> si al refinar M-06 supera sus 5 puntos, dividirla en M-06a (grupo), M-06b (manual) y M-06c (línea y activación). El artefacto aprobado no incluye esta división.</p></div>
-    </div>
-  </div>
+  <div class="sh"><span class="num">07</span><div><h2>Trazabilidad con versiones anteriores</h2><p class="sub">Las historias transversales M-02 a M-06 del artefacto se reparten por flujo y entidad. El plan v1 del 24 de noviembre ya tenía esta división; ahora va sobre las cuatro rutas aprobadas.</p></div></div>
+  <table class="t"><thead><tr><th style="width:240px">Versión anterior</th><th>Pasa a</th></tr></thead><tbody id="pmap"></tbody></table>
 </div></section>
 
 <section id="decisiones"><div class="wrap">
-  <div class="sh"><span class="num">07</span><div><h2>Decisiones: tomadas y pendientes</h2><p class="sub">En el artefacto, las pendientes aparecen como D1 a D6. Aquí se llaman DEC-1 a DEC-6 para no confundirlas con las divergencias D1 a D25 del análisis.</p></div></div>
+  <div class="sh"><span class="num">08</span><div><h2>Decisiones: tomadas y pendientes</h2><p class="sub">En el artefacto, las pendientes aparecen como D1 a D6. Aquí se llaman DEC-1 a DEC-6 para no confundirlas con las divergencias D1 a D25 del análisis.</p></div></div>
   <div class="g2">
     <div class="card"><h3>Registro de decisiones</h3><div id="reg" style="margin-top:10px"></div></div>
     <div><table class="t"><thead><tr><th style="width:70px">#</th><th>Decisión</th><th>Recomendación</th><th style="width:96px">Quién</th><th style="width:96px">Afecta</th></tr></thead><tbody id="dec"></tbody></table></div>
@@ -109,15 +121,15 @@
 </div></section>
 
 <section id="abiertas"><div class="wrap">
-  <div class="sh"><span class="num">08</span><div><h2>Preguntas del 24 de noviembre y riesgos</h2></div></div>
+  <div class="sh"><span class="num">09</span><div><h2>Preguntas abiertas y riesgos</h2></div></div>
   <div class="g2">
-    <div class="card"><h3>Estado de las preguntas abiertas</h3><div id="qst" style="margin-top:8px"></div></div>
+    <div class="card"><h3>Pendientes</h3><div id="qst" style="margin-top:8px"></div></div>
     <div class="card"><h3>Riesgos</h3><ul class="pc">
-      <li class="c"><b>!</b><span><b>Doble escritura:</b> mientras el toggle esté apagado, 1018 sigue escribiendo en OHI. No se desarrolla retroactividad en 1018 y el toggle se cambia para todo el ambiente a la vez.</span></li>
-      <li class="c"><b>!</b><span><b>Marca <code>prestacionACP=S</code>:</b> la leen las consultas de 1018 que usa el front. 1020 debe seguir escribiéndola.</span></li>
+      <li class="c"><b>!</b><span><b>Doble escritura:</b> mientras el toggle esté apagado, 1018 sigue escribiendo en OHI. No se desarrolla retroactividad en 1018 y el toggle cambia para todo el ambiente a la vez.</span></li>
+      <li class="c"><b>!</b><span><b>Marca <code>prestacionACP=S</code>:</b> la leen las consultas de 1018 que usa el front. 1020 debe seguir escribiéndola (M-ACP-2).</span></li>
       <li class="c"><b>!</b><span><b>Contrato de errores:</b> si 1020 no responde los mismos 400 y mensajes, el front deja de distinguir un rechazo de negocio de una falla técnica.</span></li>
-      <li class="c"><b>!</b><span><b>Sin timeouts hacia OHI:</b> un OHI lento ocupa los hilos de 1020 y afecta a los dos consumidores (M-07).</span></li>
-      <li class="c"><b>!</b><span><b>Escritura no atómica:</b> buscar y luego crear o actualizar el borrador no es atómico; dos consumidores pueden crear la misma línea al mismo tiempo.</span></li>
+      <li class="c"><b>!</b><span><b>Sin timeouts hacia OHI:</b> un OHI lento afecta a los dos consumidores (M-07).</span></li>
+      <li class="c"><b>!</b><span><b>Escritura no atómica:</b> buscar y luego crear o actualizar el borrador no es atómico entre consumidores.</span></li>
       <li class="c"><b>!</b><span><b>Hallazgo aparte:</b> 937-ms toma un error de OHI como «no convenida» y puede crear ACP/OCP indebidas. Se registra como bug fuera de este plan.</span></li></ul></div>
   </div>
   <a class="next" href="../arquitectura/" style="margin-top:22px">
@@ -127,7 +139,7 @@
 </div></section>
 
 </main>
-<footer><div class="wrap">Estrategia aprobada el 25 nov 2026 · Plan pendiente de cargar en la Feature 1299679 · Estados de Azure consultados el 24 nov 2026 · Fuente: <code>plan-trabajo-feature-1299679.md</code></div></footer>
+<footer><div class="wrap">Estrategia aprobada el 25 nov 2026 · Plan pendiente de cargar en la Feature 1299679 · Puntos leídos del tablero · Fuente: <code>plan-trabajo-feature-1299679.md</code></div></footer>
 
 <script src="../assets/js/common.js" defer></script>
 <script src="../assets/js/plan.js" defer></script>
